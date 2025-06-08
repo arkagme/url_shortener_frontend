@@ -1,17 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { FaCopy, FaExternalLinkAlt } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
+import { FaCopy, FaExternalLinkAlt, FaChartBar } from 'react-icons/fa';
 import { CopyToClipboard } from './CopyToClipboard';
 import { getAllUrls, incrementClickCount } from '../services/LocalStorageService';
 
-const UserDashboard = () => {
+const UserDashboard = ({ showAnalyticsLink = false }) => {
+  const navigate = useNavigate();
   const [urls, setUrls] = useState([]);
   const [copySuccess, setCopySuccess] = useState(null);
 
   useEffect(() => {
-    // loading URL using local storage
+    // loading urls using local storage
     const loadUrls = () => {
       const storedUrls = getAllUrls();
-      // sorting by creation date
+      // sort by creation date
       const sortedUrls = storedUrls.sort((a, b) => 
         new Date(b.createdAt) - new Date(a.createdAt)
       );
@@ -39,13 +41,21 @@ const UserDashboard = () => {
     incrementClickCount(id);
   };
 
+  const handleViewAnalytics = (id) => {
+    navigate(`/analytics/${id}`);
+  };
+
   const formatDate = (dateString) => {
     const options = { year: 'numeric', month: 'long', day: 'numeric' };
     return new Date(dateString).toLocaleDateString(undefined, options);
   };
 
   if (urls.length === 0) {
-    return null; // no dashboard if no URLs
+    return (
+      <div className="empty-state text-center py-10">
+        <p className="text-lg text-gray-400">You haven't shortened any URLs yet.</p>
+      </div>
+    );
   }
 
   return (
@@ -96,6 +106,16 @@ const UserDashboard = () => {
                     <FaExternalLinkAlt /> 
                     Visit
                   </a>
+                  
+                  {showAnalyticsLink && (
+                    <button
+                      onClick={() => handleViewAnalytics(url.id)}
+                      className="flex items-center gap-1 bg-purple-600 hover:bg-purple-700 text-white px-3 py-2 rounded-md text-sm"
+                    >
+                      <FaChartBar />
+                      Analytics
+                    </button>
+                  )}
                 </div>
               </div>
             </div>
