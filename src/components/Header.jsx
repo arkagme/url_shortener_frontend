@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import Logo from './Logo';
-import { FaBars, FaTimes } from 'react-icons/fa';
+import { FaHistory } from 'react-icons/fa';
+import { HiOutlineMenu, HiOutlineX } from 'react-icons/hi';
 
 const Header = () => {
+  const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -29,24 +31,56 @@ const Header = () => {
   // smooth scrolling function
   const scrollToSection = (sectionId) => {
     setMobileMenuOpen(false);
-    const element = document.getElementById(sectionId);
-    if (element) {
-      const headerOffset = 80;
-      const elementPosition = element.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-      
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: 'smooth'
-      });
+    
+    // if not on home page, navigate to home page first
+    if (window.location.pathname !== '/') {
+      navigate('/');
+      // wait for nav to complete before scrolling
+      setTimeout(() => {
+        const element = document.getElementById(sectionId);
+        if (element) {
+          const headerOffset = 80;
+          const elementPosition = element.getBoundingClientRect().top;
+          const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+          
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: 'smooth'
+          });
+        }
+      }, 100);
+    } else {
+      const element = document.getElementById(sectionId);
+      if (element) {
+        const headerOffset = 80;
+        const elementPosition = element.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+        
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth'
+        });
+      }
     }
+  };
+
+  // go to history page
+  const goToHistory = () => {
+    setMobileMenuOpen(false);
+    navigate('/history');
+  };
+
+  // go to home page
+  const goToHome = () => {
+    setMobileMenuOpen(false);
+    navigate('/');
   };
 
   // navlink styling function
   const getLinkStyles = ({ isActive }) => {
     return isActive
-      ? "text-blue-accent font-medium relative after:content-[''] after:absolute after:bottom-[-4px] after:left-0 after:w-full after:h-[2px] after:bg-blue-accent after:transition-all after:duration-500 after:transform after:origin-bottom-left"
-      : "text-white font-normal hover:text-[#261fb3] transition-colors duration-300 relative after:content-[''] after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[2px] after:bg-blue-accent after:transition-all after:duration-300 hover:after:w-full";
+      ? "text-yellow-300 font-medium relative after:content-[''] after:absolute after:bottom-[-4px] after:left-0 after:w-full after:h-[2px] after:bg-yellow-300 after:transition-all after:duration-500 after:transform after:origin-bottom-left"
+      : "text-white font-normal hover:text-[#261fb3] transition-colors duration-300 relative after:content-[''] after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[2px] after:bg-[#261fb3] after:transition-all after:duration-300 hover:after:w-full";
   };
 
   return (
@@ -57,7 +91,7 @@ const Header = () => {
     }`}>
       <div className="container mx-auto px-6 flex justify-between items-center">
         <div
-          onClick={() => scrollToSection('home')}
+          onClick={goToHome}
           className="cursor-pointer transition-transform duration-300 hover:scale-105"
         >
           <Logo />
@@ -66,34 +100,41 @@ const Header = () => {
         {/* desktop nav */} 
         <nav className="hidden md:flex items-center space-x-8">
           <button 
-            onClick={() => scrollToSection('home')}
-            className="px-6 py-3 rounded-full text-white font-medium hover:bg-white/20 hover:text-[#261fb3] transition-all duration-300"
+            onClick={goToHome}
+            className="px-6 py-3 rounded-full text-white font-medium hover:text-yellow-300 hover:bg-white/10 transition-all duration-300"
           >
             <span className="text-base tracking-wide font-bold font-poppins">Home</span>
           </button>
           <button 
             onClick={() => scrollToSection('features')}
-            className="px-6 py-3 rounded-full text-white font-medium hover:bg-white/20 hover:text-[#261fb3] transition-all duration-300"
+            className="px-6 py-3 rounded-full text-white font-medium hover:text-yellow-300 hover:bg-white/10 transition-all duration-300"
           >
             <span className="text-base tracking-wide font-bold font-poppins">Features</span>
           </button>
           <button 
             onClick={() => scrollToSection('about')}
-            className="px-6 py-3 rounded-full text-white font-medium hover:bg-white/20 hover:text-[#261fb3] transition-all duration-300"
+            className="px-6 py-3 rounded-full text-white font-medium hover:text-yellow-300 hover:bg-white/10 transition-all duration-300"
           >
             <span className="text-base tracking-wide font-bold font-poppins">About</span>
           </button>
           <button 
             onClick={() => scrollToSection('faq')}
-            className="px-6 py-3 rounded-full text-white font-medium hover:bg-white/20 hover:text-[#261fb3] transition-all duration-300"
+            className="px-6 py-3 rounded-full text-white font-medium hover:text-yellow-300 hover:bg-white/10 transition-all duration-300"
           >
             <span className="text-base tracking-wide font-bold font-poppins">FAQ</span>
           </button>
           <button 
             onClick={() => scrollToSection('contact')}
-            className="px-6 py-3 rounded-full text-white font-medium hover:bg-white/20 hover:text-[#261fb3] transition-all duration-300"
+            className="px-6 py-3 rounded-full text-white font-medium hover:text-yellow-300 hover:bg-white/10 transition-all duration-300"
           >
             <span className="text-base tracking-wide font-bold font-poppins">Contact</span>
+          </button>
+          <button 
+            onClick={goToHistory}
+            className="px-6 py-3 rounded-full text-white font-medium hover:text-yellow-300 hover:bg-white/10 transition-all duration-300 flex items-center gap-2"
+          >
+            <FaHistory className="text-base" />
+            <span className="text-base tracking-wide font-bold font-poppins">History</span>
           </button>
         </nav>
         
@@ -101,50 +142,57 @@ const Header = () => {
         <div className="md:hidden">
           <button
             onClick={toggleMobileMenu}
-            className="text-white p-3 rounded-full bg-white/10 border-2 border-white hover:bg-white/20 transition-all duration-300 focus:outline-none"
+            className="text-white focus:outline-none transition-all duration-300"
             aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
           >
-            {mobileMenuOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
+            {mobileMenuOpen ? <HiOutlineX size={28} /> : <HiOutlineMenu size={28} />}
           </button>
         </div>
       </div>
       
-      {/* mobile nav - with transition */}
+      {/* mobile nav */}
       <div
-        className={`md:hidden bg-purple-accent/95 backdrop-blur-sm overflow-hidden transition-all duration-300 ${
-          mobileMenuOpen ? 'max-h-64 opacity-100 shadow-lg' : 'max-h-0 opacity-0'
+        className={`md:hidden bg-purple-accent/95 backdrop-blur-sm overflow-y-auto transition-all duration-300 ${
+          mobileMenuOpen ? 'max-h-96 pb-8 opacity-100 shadow-lg' : 'max-h-0 opacity-0'
         }`}
       >
-        <div className="container mx-auto px-6 py-4 flex flex-col space-y-5">
+        <div className="container mx-auto px-6 py-6 flex flex-col space-y-3">
           <button
-            onClick={() => scrollToSection('home')}
-            className="block py-3 px-6 rounded-full transition-all duration-300 text-white font-medium border border-white/30 hover:bg-white/20 hover:text-[#261fb3]"
+            onClick={goToHome}
+            className="block py-3 px-6 rounded-full transition-all duration-300 text-white font-medium border border-white/30 hover:text-yellow-300 hover:bg-white/10 hover:border-yellow-300"
           >
             <span className="font-medium tracking-wide font-poppins">Home</span>
           </button>
           <button
             onClick={() => scrollToSection('features')}
-            className="block py-3 px-6 rounded-full transition-all duration-300 text-white font-medium border border-white/30 hover:bg-white/20 hover:text-[#261fb3]"
+            className="block py-3 px-6 rounded-full transition-all duration-300 text-white font-medium border border-white/30 hover:text-yellow-300 hover:bg-white/10 hover:border-yellow-300"
           >
             <span className="font-medium tracking-wide font-poppins">Features</span>
           </button>
           <button
             onClick={() => scrollToSection('about')}
-            className="block py-3 px-6 rounded-full transition-all duration-300 text-white font-medium border border-white/30 hover:bg-white/20 hover:text-[#261fb3]"
+            className="block py-3 px-6 rounded-full transition-all duration-300 text-white font-medium border border-white/30 hover:text-yellow-300 hover:bg-white/10 hover:border-yellow-300"
           >
             <span className="font-medium tracking-wide font-poppins">About</span>
           </button>
           <button
             onClick={() => scrollToSection('faq')}
-            className="block py-3 px-6 rounded-full transition-all duration-300 text-white font-medium border border-white/30 hover:bg-white/20 hover:text-[#261fb3]"
+            className="block py-2.5 px-5 rounded-full transition-all duration-300 text-white font-medium border border-white/30 hover:text-yellow-300 hover:bg-white/10 hover:border-yellow-300"
           >
-            <span className="font-medium tracking-wide font-poppins">FAQ</span>
+            <span className="font-medium tracking-wide font-poppins text-sm">FAQ</span>
           </button>
           <button
             onClick={() => scrollToSection('contact')}
-            className="block py-3 px-6 rounded-full transition-all duration-300 text-white font-medium border border-white/30 hover:bg-white/20 hover:text-[#261fb3]"
+            className="block py-3 px-6 rounded-full transition-all duration-300 text-white font-medium border border-white/30 hover:text-yellow-300 hover:bg-white/10 hover:border-yellow-300"
           >
             <span className="font-medium tracking-wide font-poppins">Contact</span>
+          </button>
+          <button
+            onClick={goToHistory}
+            className="block py-3 px-6 rounded-full transition-all duration-300 text-white font-medium border border-white/30 hover:text-yellow-300 hover:bg-white/10 hover:border-yellow-300 flex items-center gap-2 justify-center"
+          >
+            <FaHistory className="text-lg" />
+            <span className="font-medium tracking-wide font-poppins">History</span>
           </button>
         </div>
       </div>

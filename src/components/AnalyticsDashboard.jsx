@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { FaUsers, FaLink, FaMousePointer } from 'react-icons/fa';
+import { FaLink, FaMousePointer } from 'react-icons/fa';
 import { getAnalytics } from '../services/LocalStorageService';
 
 const AnalyticsDashboard = ({ urlData }) => {
   const [analytics, setAnalytics] = useState({
-    totalUsers: 0,
     totalUrls: 0,
     currentUrlClicks: 0
   });
@@ -20,7 +19,6 @@ const AnalyticsDashboard = ({ urlData }) => {
         const currentUrlClicks = urlData ? urlData.clicks || 0 : 0;
         
         setAnalytics({
-          totalUsers: analyticsData.totalUsers,
           totalUrls: analyticsData.totalUrls,
           currentUrlClicks
         });
@@ -62,13 +60,7 @@ const AnalyticsDashboard = ({ urlData }) => {
       <div className="container mx-auto px-4">
         <h2 className="text-2xl font-bold mb-8 text-center">Analytics Dashboard</h2>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-          <StatCard 
-            icon={<FaUsers size={32} />}
-            value={analytics.totalUsers}
-            label="Total Users"
-          />
-          
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mx-auto">
           <StatCard 
             icon={<FaLink size={32} />}
             value={analytics.totalUrls}
