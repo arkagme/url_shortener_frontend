@@ -4,7 +4,7 @@ import HomePage from './pages/HomePage';
 import ResultsPage from './pages/ResultsPage';
 import HistoryPage from './pages/HistoryPage';
 import AnalyticsPage from './pages/AnalyticsPage';
-
+import Dashboard from './pages/Dashboard';
 function App() {
   return (
     <div className="app">
@@ -15,6 +15,7 @@ function App() {
         <Route path="/analytics/:id" element={<AnalyticsPage />} />
         {/* redirect other routes to home */}
         <Route path="*" element={<Navigate to="/" />} />
+        <Route path="/dashboard" element={<Dashboard/>}/>
       </Routes>
     </div>
   );
